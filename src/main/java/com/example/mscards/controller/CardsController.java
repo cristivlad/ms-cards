@@ -8,6 +8,8 @@ import com.example.mscards.repository.CardsRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +17,7 @@ import java.util.List;
 @RestController
 public class CardsController {
 
+    private static final Logger logger = LoggerFactory.getLogger(CardsController.class);
     private final CardsRepository cardsRepository;
     private final CardsServiceConfig cardsConfig;
 
@@ -25,7 +28,10 @@ public class CardsController {
 
     @PostMapping("/myCards")
     public List<Cards> getCardDetails(@RequestHeader("tmx-correlation-id") String correlationId, @RequestBody Customer customer) {
-        return cardsRepository.findByCustomerId(customer.getCustomerId());
+        logger.info("getCardDetails started");
+        List<Cards> byCustomerId = cardsRepository.findByCustomerId(customer.getCustomerId());
+        logger.info("getCardDetails ended");
+        return byCustomerId;
     }
 
     @GetMapping("/cards/properties")
